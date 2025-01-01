@@ -29,12 +29,10 @@ pipeline {
         stage('Run Schema Conversion') {
             steps {
                 echo 'Running schema conversion script...'
-                withCredentials([aws(credentialsId: AWS_CREDENTIALS_ID, region: AWS_REGION)]) {
-                    script {
-                        def exitCode = sh(script: "docker run --rm -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e AWS_REGION=${AWS_REGION} ${DOCKER_IMAGE} python ${SCT_SCRIPT}", returnStatus: true)
-                        if (exitCode != 0) {
-                            error("Schema conversion script failed. Exiting pipeline.")
-                        }
+                script {
+                    def exitCode = sh(script: "docker run --rm ${DOCKER_IMAGE} python ${SCT_SCRIPT}", returnStatus: true)
+                    if (exitCode != 0) {
+                        error("Schema conversion script failed. Exiting pipeline.")
                     }
                 }
             }
@@ -43,12 +41,10 @@ pipeline {
         stage('Test Schema') {
             steps {
                 echo 'Testing schema...'
-                withCredentials([aws(credentialsId: AWS_CREDENTIALS_ID, region: AWS_REGION)]) {
-                    script {
-                        def exitCode = sh(script: "docker run --rm -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e AWS_REGION=${AWS_REGION} ${DOCKER_IMAGE} python ${SCHEMA_TEST_SCRIPT}", returnStatus: true)
-                        if (exitCode != 0) {
-                            error("Schema testing failed. Exiting pipeline.")
-                        }
+                script {
+                    def exitCode = sh(script: "docker run --rm ${DOCKER_IMAGE} python ${SCHEMA_TEST_SCRIPT}", returnStatus: true)
+                    if (exitCode != 0) {
+                        error("Schema testing failed. Exiting pipeline.")
                     }
                 }
             }
@@ -97,12 +93,10 @@ pipeline {
         stage('Test Data') {
             steps {
                 echo 'Testing data migration accuracy...'
-                withCredentials([aws(credentialsId: AWS_CREDENTIALS_ID, region: AWS_REGION)]) {
-                    script {
-                        def exitCode = sh(script: "docker run --rm -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e AWS_REGION=${AWS_REGION} ${DOCKER_IMAGE} python ${DATA_TEST_SCRIPT}", returnStatus: true)
-                        if (exitCode != 0) {
-                            error("Data migration accuracy testing failed. Exiting pipeline.")
-                        }
+                script {
+                    def exitCode = sh(script: "docker run --rm ${DOCKER_IMAGE} python ${DATA_TEST_SCRIPT}", returnStatus: true)
+                    if (exitCode != 0) {
+                        error("Data migration accuracy testing failed. Exiting pipeline.")
                     }
                 }
             }
