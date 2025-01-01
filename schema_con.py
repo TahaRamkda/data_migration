@@ -2,22 +2,24 @@ import psycopg2
 import mysql.connector
 
 # PostgreSQL connection details
-pg_host = "localhost"
-pg_db = "devops"
-pg_user = "postgres"
+pg_host = "172.27.232.2"
+pg_db = "postgres"
+pg_user = "dms_user"
 pg_password = "post0253"
+port = "1194"
 
 # MySQL connection details
-mysql_host = "database-1.c3s2sg2mo7cc.us-east-1.rds.amazonaws.com"  # Example: 'your-aws-mysql-endpoint'
-mysql_db = "devOps"
+mysql_host = "mysql-db.c3s2sg2mo7cc.us-east-1.rds.amazonaws.com"  # Example: 'your-aws-mysql-endpoint'
+mysql_db = "mysql"
 mysql_user = "admin"
 mysql_password = "mysql0253"
-# Connect to PostgreSQL
+
 pg_conn = psycopg2.connect(
     host=pg_host,
     database=pg_db,
     user=pg_user,
-    password=pg_password
+    password=pg_password,
+    port=port
 )
 pg_cursor = pg_conn.cursor()
 
