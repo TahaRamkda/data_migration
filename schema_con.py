@@ -13,6 +13,7 @@ mysql_host = "mysql-db.c3s2sg2mo7cc.us-east-1.rds.amazonaws.com"  # Example: 'yo
 mysql_db = "mysql"
 mysql_user = "admin"
 mysql_password = "mysql0253"
+mysql_port= "3306"
 
 try:
     # Connect to PostgreSQL
@@ -30,7 +31,8 @@ try:
         host=mysql_host,
         user=mysql_user,
         password=mysql_password,
-        database=mysql_db
+        database=mysql_db,
+        port=mysql_port
     )
     mysql_cursor = mysql_conn.cursor()
 
