@@ -44,7 +44,8 @@ def test_schema():
 
         # Check columns and types
         cursor.execute("DESCRIBE orders")
-        columns = {col[0]: col[1] for col in cursor.fetchall()}
+        columns = {col[0]: col[1].decode('utf-8') if isinstance(col[1], bytes) else col[1] for col in cursor.fetchall()}
+
         for column, expected_type in EXPECTED_SCHEMA['orders']['columns'].items():
             if column not in columns:
                 print(f"Column '{column}' is missing!")
@@ -60,8 +61,9 @@ def test_schema():
         sys.exit(1)  # Exit with error code 1 to stop the pipeline
     
     finally:
-        if connection:
+        if 'cursor' in locals():
             cursor.close()
+        if 'connection' in locals():
             connection.close()
 
 if __name__ == "__main__":
