@@ -19,12 +19,12 @@ EXPECTED_SCHEMA = {
             'product_id': 'varchar(255)',
             'transaction_date': 'date',
             'units_sold': 'decimal(10,2)',
-            'discount_applied': 'decimal(5,2)',
+            'discount_applied': 'decimal(10,2)',
             'revenue': 'decimal(10,2)',
-            'clicks': 'int',
-            'impressions': 'int',
-            'conversion_rate': 'decimal(5,2)',
-            'ad_cpc': 'decimal(5,2)',
+            'clicks': 'decimal(10,2)',
+            'impressions': 'decimal(10,2)',
+            'conversion_rate': 'decimal(10,2)',
+            'ad_cpc': 'decimal(10,2)',
             'ad_spend': 'decimal(10,2)'
         }
     }
