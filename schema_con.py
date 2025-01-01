@@ -2,7 +2,7 @@ import psycopg2
 import mysql.connector
 
 # PostgreSQL connection details
-pg_host = "172.27.232.3"
+pg_host = "172.27.236.3"
 pg_db = "postgres"
 pg_user = "dms_user"
 pg_password = "post0253"

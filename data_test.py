@@ -4,7 +4,7 @@ import sys
 
 # Database connection configurations
 SOURCE_DB_CONFIG = {
-    'host': '172.27.232.3',
+    'host': '172.27.236.3',
     'user': 'dms_user',
     'password': 'post0253',
     'database': 'postgres',
