@@ -80,11 +80,12 @@ except Exception as e:
     
 finally:
     # Close connections
-    if pg_cursor:
+    if 'pg_cursor' in locals():
         pg_cursor.close()
-    if pg_conn:
+    if 'pg_conn' in locals():
         pg_conn.close()
-    if mysql_cursor:
+
+    if 'mysql_cursor' in locals():
         mysql_cursor.close()
-    if mysql_conn:
+    if 'mysql_conn' in locals():
         mysql_conn.close()
