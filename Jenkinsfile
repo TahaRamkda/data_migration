@@ -54,7 +54,7 @@ pipeline {
             steps {
                 echo 'Starting AWS DMS migration task...'
                 withCredentials([aws(credentialsId: AWS_CREDENTIALS_ID, region: AWS_REGION)]) {
-                    sh "aws dms start-replication-task --replication-task-arn ${MIGRATION_TASK_ARN} --start-replication-task-type reload-target --region ${AWS_REGION}"
+                    sh "export PATH=/usr/bin:$PATH && aws dms start-replication-task --replication-task-arn ${MIGRATION_TASK_ARN} --start-replication-task-type reload-target --region ${AWS_REGION}"
                 }
             }
         }
@@ -69,7 +69,7 @@ pipeline {
                         def status = ""
 
                         for (int i = 0; i < maxRetries; i++) {
-                            status = sh(script: "aws dms describe-replication-tasks --filters Name=replication-task-arn,Values=${MIGRATION_TASK_ARN} --region ${AWS_REGION} --query 'ReplicationTasks[0].Status' --output text", returnStdout: true).trim()
+                            status = sh(script: "export PATH=/usr/bin:$PATH && aws dms describe-replication-tasks --filters Name=replication-task-arn,Values=${MIGRATION_TASK_ARN} --region ${AWS_REGION} --query 'ReplicationTasks[0].Status' --output text", returnStdout: true).trim()
                             echo "Current migration status: ${status}"
 
                             if (status == "completed") {
