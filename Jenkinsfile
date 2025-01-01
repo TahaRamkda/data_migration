@@ -15,7 +15,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo 'Cloning repository...'
-                sh 'git clone -b main https://github.com/TahaRamkda/data_migration.git'
+                checkout scm
             }
         }
 
