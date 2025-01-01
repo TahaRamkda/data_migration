@@ -14,60 +14,77 @@ mysql_db = "mysql"
 mysql_user = "admin"
 mysql_password = "mysql0253"
 
-pg_conn = psycopg2.connect(
-    host=pg_host,
-    database=pg_db,
-    user=pg_user,
-    password=pg_password,
-    port=port
-)
-pg_cursor = pg_conn.cursor()
+try:
+    # Connect to PostgreSQL
+    pg_conn = psycopg2.connect(
+        host=pg_host,
+        database=pg_db,
+        user=pg_user,
+        password=pg_password,
+        port=port
+    )
+    pg_cursor = pg_conn.cursor()
 
-# Connect to MySQL
-mysql_conn = mysql.connector.connect(
-    host=mysql_host,
-    user=mysql_user,
-    password=mysql_password,
-    database=mysql_db
-)
-mysql_cursor = mysql_conn.cursor()
+    # Connect to MySQL
+    mysql_conn = mysql.connector.connect(
+        host=mysql_host,
+        user=mysql_user,
+        password=mysql_password,
+        database=mysql_db
+    )
+    mysql_cursor = mysql_conn.cursor()
 
-pg_cursor.execute("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'orders';")
-columns = pg_cursor.fetchall()
+    # Get column details from PostgreSQL table 'orders'
+    pg_cursor.execute("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'orders';")
+    columns = pg_cursor.fetchall()
 
-create_table_sql = "CREATE TABLE IF NOT EXISTS orders ("
+    if not columns:
+        raise Exception("No columns found for the 'orders' table in PostgreSQL.")
 
-for column in columns:
-    column_name = column[0]
-    column_type = column[1]
+    create_table_sql = "CREATE TABLE IF NOT EXISTS orders ("
 
-    if column_type == "character varying":
-        column_type = "VARCHAR(255)"
-    elif column_type == "integer":
-        column_type = "INT"
-    elif column_type == "date":
-        column_type = "DATE"
-    elif column_type == "numeric":
-        column_type = "DECIMAL(10, 2)"
-    elif column_type == "text":
-        column_type = "TEXT"
-    elif column_type == "double precision":
-        column_type = "DOUBLE"
+    # Convert PostgreSQL column types to MySQL types
+    for column in columns:
+        column_name = column[0]
+        column_type = column[1]
 
+        if column_type == "character varying":
+            column_type = "VARCHAR(255)"
+        elif column_type == "integer":
+            column_type = "INT"
+        elif column_type == "date":
+            column_type = "DATE"
+        elif column_type == "numeric":
+            column_type = "DECIMAL(10, 2)"
+        elif column_type == "text":
+            column_type = "TEXT"
+        elif column_type == "double precision":
+            column_type = "DOUBLE"
+        else:
+            # Handle any types that aren't explicitly mapped
+            column_type = "TEXT"  # Default fallback
+
+        create_table_sql += f"{column_name} {column_type}, "
+
+    # Remove the last comma and add the closing parenthesis
+    create_table_sql = create_table_sql.rstrip(', ') + ");"
+
+    # Execute the SQL query to create the table in MySQL
+    mysql_cursor.execute(create_table_sql)
+    mysql_conn.commit()
+
+    print("Table 'orders' successfully created in MySQL.")
+
+except Exception as e:
+    print(f"An error occurred: {e}")
     
-    create_table_sql += f"{column_name} {column_type}, "
-
-# Remove the last comma and add the closing parenthesis
-create_table_sql = create_table_sql.rstrip(', ') + ");"
-
-# Step 3: Execute the SQL query to create the table in MySQL
-mysql_cursor.execute(create_table_sql)
-mysql_conn.commit()
-
-# Step 4: Close connections
-pg_cursor.close()
-pg_conn.close()
-mysql_cursor.close()
-mysql_conn.close()
-
-print("Table 'orders' successfully created in MySQL.")
+finally:
+    # Close connections
+    if pg_cursor:
+        pg_cursor.close()
+    if pg_conn:
+        pg_conn.close()
+    if mysql_cursor:
+        mysql_cursor.close()
+    if mysql_conn:
+        mysql_conn.close()
