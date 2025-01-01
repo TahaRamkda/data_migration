@@ -5,9 +5,9 @@ import sys
 DB_CONFIG = {
     'host': 'mysql-db.c3s2sg2mo7cc.us-east-1.rds.amazonaws.com',
     'port': '3306',
-    'user': 'admin',
+    'user': 'dms_user',
     'password': 'mysql0253',
-    'database': 'mysql'
+    'database': 'devops'
 }
 
 # Expected schema for the table

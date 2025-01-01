@@ -4,7 +4,7 @@ import sys
 
 # Database connection configurations
 SOURCE_DB_CONFIG = {
-    'host': '172.27.232.4',
+    'host': '172.27.236.4',
     'user': 'dms_user',
     'password': 'post0253',
     'database': 'postgres',
@@ -13,9 +13,9 @@ SOURCE_DB_CONFIG = {
 
 TARGET_DB_CONFIG = {
     'host': 'mysql-db.c3s2sg2mo7cc.us-east-1.rds.amazonaws.com',
-    'user': 'admin',
+    'user': 'dms_user',
     'password': 'mysql0253',
-    'database': 'mysql'
+    'database': 'devops'
 }
 
 # Table and columns to validate

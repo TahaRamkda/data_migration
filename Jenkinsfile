@@ -7,7 +7,7 @@ pipeline {
         SCHEMA_TEST_SCRIPT = 'schema_test.py'
         DATA_TEST_SCRIPT = 'data_test.py'
         AWS_REGION = 'us-east-1' // Replace with your AWS region
-        MIGRATION_TASK_ARN = 'arn:aws:dms:us-east-1:767397679048:task:7LTM2EIYEVAXTAMGBBDGC6BSHU'
+        MIGRATION_TASK_ARN = 'arn:aws:dms:us-east-1:767397679048:task:HYJCA2PLVBESBG3MNRKZEWAGM4'
         AWS_CREDENTIALS_ID = 'aws-credentials' // The ID of your AWS credentials in Jenkins
     }
 
