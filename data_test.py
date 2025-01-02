@@ -13,7 +13,7 @@ SOURCE_DB_CONFIG = {
 
 TARGET_DB_CONFIG = {
     'host': 'mysql-db.c3s2sg2mo7cc.us-east-1.rds.amazonaws.com',
-    'user': 'dms_user',
+    'user': 'admin',
     'password': 'mysql0253',
     'database': 'company'
 }
