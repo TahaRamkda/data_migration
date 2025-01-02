@@ -5,10 +5,8 @@ pipeline {
         DOCKER_IMAGE = 'schema-migration:latest'
         SCT_SCRIPT = 'schema_con.py'
         SCHEMA_TEST_SCRIPT = 'schema_test.py'
+        MIGRATION_SCRIPT = 'migration.py'
         DATA_TEST_SCRIPT = 'data_test.py'
-        AWS_REGION = 'us-east-1' // Replace with your AWS region
-        MIGRATION_TASK_ARN = 'arn:aws:dms:us-east-1:767397679048:task:HYJCA2PLVBESBG3MNRKZEWAGM4'
-        AWS_CREDENTIALS_ID = 'aws-credentials' // The ID of your AWS credentials in Jenkins
     }
 
     stages {
@@ -50,41 +48,13 @@ pipeline {
             }
         }
 
-        stage('Start Migration Task') {
+        stage('Run Migration Script') {
             steps {
-                echo 'Starting AWS DMS migration task...'
-                withCredentials([aws(credentialsId: AWS_CREDENTIALS_ID, region: AWS_REGION)]) {
-                    sh "export PATH=/usr/bin:$PATH && aws dms start-replication-task --replication-task-arn ${MIGRATION_TASK_ARN} --start-replication-task-type reload-target --region ${AWS_REGION}"
-                }
-            }
-        }
-
-        stage('Wait for Migration Completion') {
-            steps {
-                echo 'Waiting for AWS DMS migration task to complete...'
-                withCredentials([aws(credentialsId: AWS_CREDENTIALS_ID, region: AWS_REGION)]) {
-                    script {
-                        def maxRetries = 60 // Maximum number of checks (1 hour total)
-                        def delay = 60      // Delay between checks in seconds (1 minute)
-                        def status = ""
-
-                        for (int i = 0; i < maxRetries; i++) {
-                            status = sh(script: "export PATH=/usr/bin:$PATH && aws dms describe-replication-tasks --filters Name=replication-task-arn,Values=${MIGRATION_TASK_ARN} --region ${AWS_REGION} --query 'ReplicationTasks[0].Status' --output text", returnStdout: true).trim()
-                            echo "Current migration status: ${status}"
-
-                            if (status == "completed") {
-                                echo "Migration task completed successfully."
-                                break
-                            } else if (status == "failed") {
-                                error("Migration task failed. Exiting pipeline.")
-                            }
-
-                            sleep(delay)
-                        }
-
-                        if (status != "completed") {
-                            error("Migration task did not complete within the expected time. Exiting pipeline.")
-                        }
+                echo 'Running migration script...'
+                script {
+                    def exitCode = sh(script: "docker run --rm ${DOCKER_IMAGE} python ${MIGRATION_SCRIPT}", returnStatus: true)
+                    if (exitCode != 0) {
+                        error("Migration script failed. Exiting pipeline.")
                     }
                 }
             }
