@@ -8,7 +8,7 @@ SOURCE_DB_CONFIG = {
     'user': 'dms_user',
     'password': 'post0253',
     'database': 'postgres',
-    'post':'1194'
+    'port': '1194'
 }
 
 TARGET_DB_CONFIG = {
@@ -33,11 +33,16 @@ def fetch_mysql_data(cursor, table_name, key_columns):
     return cursor.fetchall()
 
 def validate_data():
+    # Initialize cursor and connection variables to None
+    source_conn = target_conn = None
+    source_cursor = target_cursor = None
+
     try:
         # Connect to source (PostgreSQL) and target (MySQL) databases
         source_conn = psycopg2.connect(**SOURCE_DB_CONFIG)
-        target_conn = mysql.connector.connect(**TARGET_DB_CONFIG)
         source_cursor = source_conn.cursor()
+
+        target_conn = mysql.connector.connect(**TARGET_DB_CONFIG)
         target_cursor = target_conn.cursor()
 
         # Fetch data from source and target
@@ -56,17 +61,21 @@ def validate_data():
                 sys.exit(1)  # Exit with error code 1
 
         print("Data validation successful: All rows match!")
-    
+
     except (psycopg2.Error, mysql.connector.Error) as err:
         print(f"Error: {err}")
         sys.exit(1)  # Exit with error code 1
 
     finally:
-        # Close connections
-        if source_cursor: source_cursor.close()
-        if source_conn: source_conn.close()
-        if target_cursor: target_cursor.close()
-        if target_conn: target_conn.close()
+        # Close connections only if they were successfully initialized
+        if source_cursor is not None:
+            source_cursor.close()
+        if source_conn is not None:
+            source_conn.close()
+        if target_cursor is not None:
+            target_cursor.close()
+        if target_conn is not None:
+            target_conn.close()
 
 if __name__ == "__main__":
     validate_data()
