@@ -3,10 +3,10 @@ from sqlalchemy import create_engine
 import sys  # Required for exiting with a specific exit code
 
 # PostgreSQL connection
-pg_engine = create_engine('postgresql://dms_user:post0253@172.27.232.2:1194/postgres')
+pg_engine = create_engine('postgresql://dms_user:post0253@openvpn-ip:1194/postgres')
 
 # MySQL connection
-mysql_engine = create_engine('mysql+pymysql://admin:mysql0253@mysql-db.c3s2sg2mo7cc.us-east-1.rds.amazonaws.com:3306/company')
+mysql_engine = create_engine('mysql+pymysql://admin:target-endpoint:3306/dbname')
 
 try:
     # Fetch data from PostgreSQL

@@ -2,17 +2,17 @@ import psycopg2
 import mysql.connector
 
 # PostgreSQL connection details
-pg_host = "172.27.232.2"
+pg_host = "openvpn-ip"
 pg_db = "postgres"
 pg_user = "dms_user"
-pg_password = "post0253"
+pg_password = "password"
 port = "1194"
 
 # MySQL connection details
-mysql_host = "mysql-db.c3s2sg2mo7cc.us-east-1.rds.amazonaws.com"  # Example: 'your-aws-mysql-endpoint'
-mysql_db = "company"
+mysql_host = "host-ip"  # Example: 'your-aws-mysql-endpoint'
+mysql_db = "dbname"
 mysql_user = "admin"
-mysql_password = "mysql0253"
+mysql_password = "password"
 mysql_port= "3306"
 
 pg_conn = psycopg2.connect(

@@ -3,11 +3,11 @@ import sys
 
 # Database connection configuration
 DB_CONFIG = {
-    'host': 'mysql-db.c3s2sg2mo7cc.us-east-1.rds.amazonaws.com',
+    'host': 'target-endpoint',
     'port': '3306',
     'user': 'admin',
-    'password': 'mysql0253',
-    'database': 'company'
+    'password': 'passwrod',
+    'database': 'dbname'
 }
 
 # Expected schema for the table
